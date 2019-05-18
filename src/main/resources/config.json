@@ -10,20 +10,15 @@
   "agentPort": 443,
   "truststorePath": "all_symphony_certs_truststore",
   "truststorePassword": "changeit",
-  "botUsername": "bot.user01",
-  "botEmailAddress": "bot.user01@example.com",
-  "botPrivateKeyPath": "rsa/",
-  "botPrivateKeyName": "rsa-private-bot.user01.pem"
 
   // For bots only
-  "botUsername": "my-bot-name",
-  "botEmailAddress": "bot@company.com",
+  "botUsername": "innovatebot_68",
+  "botEmailAddress": "ken.x.lin@hsbc.com.cn",
   // For bots using RSA authentication
-  "botPrivateKeyPath": "/path/to/rsa/private-key/",
-  "botPrivateKeyName": "bot-private-key.pem",
+  "botPrivateKeyPath": "/",
+  "botPrivateKeyName": "innovatebot_68_privatekey.pem",
   // For bots using certificate authentication
-  "botCertPath": "/path/to/bot-cert/",
-  "botCertName": "bot-cert.p12",
-  "botCertPassword": "bot-cert-password",
-
+  "botCertPath": "/",
+  "botCertName": "innovatebot_68.p12",
+  "botCertPassword": "bot-cert-password"
 }
