@@ -1,0 +1,29 @@
+{
+  // Mandatory section
+  "sessionAuthHost": "develop2.symphony.com",
+  "sessionAuthPort": 443,
+  "keyAuthHost": "develop2.symphony.com",
+  "keyAuthPort": 443,
+  "podHost": "develop2.symphony.com",
+  "podPort": 443,
+  "agentHost": "develop2.symphony.com",
+  "agentPort": 443,
+  "truststorePath": "all_symphony_certs_truststore",
+  "truststorePassword": "changeit",
+  "botUsername": "bot.user01",
+  "botEmailAddress": "bot.user01@example.com",
+  "botPrivateKeyPath": "rsa/",
+  "botPrivateKeyName": "rsa-private-bot.user01.pem"
+
+  // For bots only
+  "botUsername": "my-bot-name",
+  "botEmailAddress": "bot@company.com",
+  // For bots using RSA authentication
+  "botPrivateKeyPath": "/path/to/rsa/private-key/",
+  "botPrivateKeyName": "bot-private-key.pem",
+  // For bots using certificate authentication
+  "botCertPath": "/path/to/bot-cert/",
+  "botCertName": "bot-cert.p12",
+  "botCertPassword": "bot-cert-password",
+
+}
