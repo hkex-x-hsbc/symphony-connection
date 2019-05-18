@@ -13,7 +13,7 @@
 
   // For bots only
   "botUsername": "innovatebot_68",
-  "botEmailAddress": "ken.x.lin@hsbc.com.cn",
+  "botEmailAddress": "xxx",
   // For bots using RSA authentication
   "botPrivateKeyPath": "/",
   "botPrivateKeyName": "innovatebot_68_privatekey.pem",
