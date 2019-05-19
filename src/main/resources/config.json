@@ -1,5 +1,4 @@
 {
-  // Mandatory section
   "sessionAuthHost": "develop2.symphony.com",
   "sessionAuthPort": 443,
   "keyAuthHost": "develop2.symphony.com",
@@ -8,17 +7,20 @@
   "podPort": 443,
   "agentHost": "develop2.symphony.com",
   "agentPort": 443,
-  "truststorePath": "all_symphony_certs_truststore",
+  "botCertPath": "",
+  "botCertName": "",
+  "botCertPassword": "",
+  "botEmailAddress": "innovate_bot_68@devmeetup.com",
+  "appCertPath": "",
+  "appCertName": "",
+  "appCertPassword": "",
+  "proxyURL": "",
+  "proxyUsername": "",
+  "proxyPassword": "",
+  "authTokenRefreshPeriod": "30",
+  "truststorePath": "classpath:certificates/all_symphony_certs_truststore",
   "truststorePassword": "changeit",
-
-  // For bots only
-  "botUsername": "innovatebot_68",
-  "botEmailAddress": "xxx",
-  // For bots using RSA authentication
-  "botPrivateKeyPath": "/",
-  "botPrivateKeyName": "innovatebot_68_privatekey.pem",
-  // For bots using certificate authentication
-  "botCertPath": "/",
-  "botCertName": "innovatebot_68.p12",
-  "botCertPassword": "bot-cert-password"
+  "botPrivateKeyPath": "classpath:rsa/",
+  "botPrivateKeyName": "innovate_bot_68_privatekey.pem",
+  "botUsername": "innovate_bot_68"
 }
