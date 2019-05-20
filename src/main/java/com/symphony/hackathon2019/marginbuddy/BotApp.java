@@ -1,54 +1,49 @@
 package com.symphony.hackathon2019.marginbuddy;
 
+import authentication.ISymAuth;
+import authentication.SymBotRSAAuth;
+import clients.SymBotClient;
+import configuration.SymConfig;
+import configuration.SymConfigLoader;
+import listeners.IMListener;
+import listeners.RoomListener;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.symphonyoss.client.SymphonyClient;
-import org.symphonyoss.client.SymphonyClientConfig;
-import org.symphonyoss.client.SymphonyClientConfigID;
-import org.symphonyoss.client.SymphonyClientFactory;
-import org.symphonyoss.client.exceptions.AuthenticationException;
-import org.symphonyoss.client.exceptions.InitException;
-import org.symphonyoss.client.impl.CustomHttpClient;
+import services.DatafeedEventsService;
 
-import javax.ws.rs.client.Client;
-
-import static org.symphonyoss.client.SymphonyClientConfigID.TRUSTSTORE_FILE;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 @Slf4j
 public class BotApp {
+
+    public static final String CLASSPATH = "classpath:";
+
+    private static String resolvePath(String path) {
+        if (path != null && path.startsWith(CLASSPATH)) {
+            return BotApp.class.getClassLoader()
+                    .getResource(path.substring(CLASSPATH.length()))
+                    .getPath();
+        }
+
+        return path;
+    }
+
     public static void main(String[] args) {
-        try {
-            getSymphonyClient();
+        try(InputStream inputStream = new FileInputStream(resolvePath("classpath:config.json"))) {
+            SymConfigLoader configLoader = new SymConfigLoader();
+            SymConfig config = configLoader.load(inputStream);
+            config.setTruststorePath(resolvePath(config.getTruststorePath()));
+            config.setBotPrivateKeyPath(resolvePath(config.getBotPrivateKeyPath()));
+            ISymAuth botAuth = new SymBotRSAAuth(config);
+            botAuth.authenticate();
+            SymBotClient botClient = SymBotClient.initBot(config, botAuth);
+            DatafeedEventsService datafeedEventsService = botClient.getDatafeedEventsService();
+            RoomListener roomListenerTest = new RoomListenerImpl(botClient);
+            datafeedEventsService.addRoomListener(roomListenerTest);
+            IMListener imListener = new IMListenerImpl(botClient);
+            datafeedEventsService.addIMListener(imListener);
         } catch (Exception e) {
             log.error("Failed to connect to develop2.symphony.com", e);
         }
-    }
-
-    public static SymphonyClient getSymphonyClient()
-            throws Exception {
-        SymphonyClientConfig symphonyClientConfig = new SymphonyClientConfig(BotApp.class.getResource("/symphony.properties").getPath());
-        symphonyClientConfig.set(TRUSTSTORE_FILE, BotApp.class.getResource("/certificates/all_symphony_certs_truststore").getPath());
-
-        SymphonyClient symClient = SymphonyClientFactory.getClient(SymphonyClientFactory.TYPE.BASIC);
-        String proxy = symphonyClientConfig.get("proxy.url");
-        if (proxy == null) {
-            symClient.init(symphonyClientConfig);
-            return symClient;
-        }
-
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.connectorProvider(new ApacheConnectorProvider());
-        clientConfig.property(ClientProperties.PROXY_URI, proxy);
-
-        Client httpClient = CustomHttpClient.getClient(
-                symphonyClientConfig.get(SymphonyClientConfigID.USER_CERT_FILE),
-                symphonyClientConfig.get(SymphonyClientConfigID.USER_CERT_PASSWORD),
-                symphonyClientConfig.get(TRUSTSTORE_FILE),
-                symphonyClientConfig.get(SymphonyClientConfigID.TRUSTSTORE_PASSWORD),
-                clientConfig);
-        symClient.init(httpClient, symphonyClientConfig);
-        return symClient;
     }
 }
