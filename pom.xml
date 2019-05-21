@@ -104,6 +104,20 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+	    <plugin>
+		    <groupId>com.google.cloud.tools</groupId>
+		    <artifactId>appengine-maven-plugin</artifactId>
+		    <version>2.0.0</version>
+		    <configuration>
+			    <deploy.projectId>symphony-hackathon-240814</deploy.projectId>
+			    <deploy.version>GCLOUD_CONFIG</deploy.version>
+		    </configuration>
+	    </plugin>
+	    <plugin>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>jetty-maven-plugin</artifactId>
+		    <version>9.3.7.v20160115</version>
+	    </plugin>
         </plugins>
     </build>
 

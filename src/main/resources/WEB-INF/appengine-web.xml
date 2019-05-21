@@ -1,0 +1,14 @@
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+  <version>1</version>
+  <threadsafe>true</threadsafe>
+  <runtime>java8</runtime>
+  <automatic-scaling>
+    <min-idle-instances>0</min-idle-instances>
+    <!-- ‘automatic’ is the default value. -->
+    <max-idle-instances>1</max-idle-instances>
+    <!-- ‘automatic’ is the default value. -->
+    <min-pending-latency>30ms</min-pending-latency>
+    <max-pending-latency>automatic</max-pending-latency>
+    <max-concurrent-requests>100</max-concurrent-requests>
+  </automatic-scaling>
+</appengine-web-app>
