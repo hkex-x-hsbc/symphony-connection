@@ -21,8 +21,8 @@ public class BotExample {
 
         SymConfigLoader configLoader = new SymConfigLoader();
         SymConfig config = configLoader.load(this.getClass().getClassLoader().getResourceAsStream("config.json"));
-        config.setTruststorePath(config.getTruststorePath().startsWith("classpath") ? getClass().getClassLoader().getResource(config.getTruststorePath().substring(10)).getPath() : config.getTruststorePath());
-        config.setBotPrivateKeyPath(config.getBotPrivateKeyPath().startsWith("classpath") ? getClass().getClassLoader().getResource(config.getBotPrivateKeyPath().substring(10)).getPath() : config.getBotPrivateKeyPath());
+        config.setTruststorePath(config.getTruststorePath().startsWith("classpath") ? config.getTruststorePath().substring(10) : config.getTruststorePath());
+        config.setBotPrivateKeyPath(config.getBotPrivateKeyPath().startsWith("classpath") ? config.getBotPrivateKeyPath().substring(10) : config.getBotPrivateKeyPath());
         ISymAuth botAuth = new SymBotRSAAuth(config);
         botAuth.authenticate();
         SymBotClient botClient = SymBotClient.initBot(config, botAuth);
