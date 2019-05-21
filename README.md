@@ -1,2 +1,5 @@
 # symphony-connection
-testing by Billy Yiu
+To deploy app engine:
+
+mvn appengine:deploy
+
