@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  h2:
+    console:
+      path: /h2console
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:MarginBotDB
+    username: sa
+    password: abc123
+    schema: classpath:db/schema.sql
+    data: classpath:db/data.sql
+    driver-class-name: org.h2.Driver
+    initialization-mode: embedded

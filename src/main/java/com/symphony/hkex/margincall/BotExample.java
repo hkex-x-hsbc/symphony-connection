@@ -16,11 +16,6 @@ import java.util.List;
 
 public class BotExample {
 
-    public static void main(String[] args) {
-        BotExample app = new BotExample();
-    }
-
-
     public BotExample() {
         BasicConfigurator.configure();
 
