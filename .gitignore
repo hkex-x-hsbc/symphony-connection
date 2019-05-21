@@ -24,3 +24,4 @@ nbdist/
 
 ### Symphony ###
 **/rsa/*.pem
+**/rsa/*.json
