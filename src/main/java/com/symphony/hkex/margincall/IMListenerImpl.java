@@ -63,7 +63,7 @@ public class IMListenerImpl implements IMListener {
 
                 Assert.hasText(partOrGcpID);
 
-                if (inboundMessageText.indexOf("HK$") > -1 && inboundMessageText.indexOf("Detail breakdown") > inboundMessageText.indexOf("HK$")) {
+                if (inboundMessageText.indexOf("HK$") > -1) {
                     paymentAmount = inboundMessageText.substring(inboundMessageText.indexOf("HK$") + 3).trim();
                     paymentAmount = marginCallType.equals("C") ? paymentAmount.substring(0, paymentAmount.indexOf("Detail breakdown")).trim() : paymentAmount.substring(0, paymentAmount.indexOf("For more details")).trim();
                 }
