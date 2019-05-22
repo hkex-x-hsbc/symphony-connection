@@ -87,13 +87,7 @@ public class IMListenerImpl implements IMListener {
         }
         //TODO: insert IDM call record to T_MARGIN_CALL_RECORD
         OutboundMessage messageOut = new OutboundMessage();
-        String outboundMessageTemplate = "<b>Margin Call ID: #System-#workflowId</b><br/>" +
-                "<b>#partOrGcpName</b><br/>" +
-                "<b>#partOrGcpID</b><br/>" +
-                "========================<br/>" +
-                "#paymentStatus<br/>" +
-                "========================";
-        String messageOutText = outboundMessageTemplate.replace("#System-#workflowId", marginCallId).replace("#partOrGcpName", partOrGcpName).replace("#partOrGcpID", partOrGcpID).replace("#paymentStatus", "Funding ready.");
+        String messageOutText = "paid " + marginCallId.substring(marginCallId.indexOf("-") + 1);
         messageOut.setMessage(messageOutText);
         try {
             this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
