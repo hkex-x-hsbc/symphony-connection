@@ -86,13 +86,15 @@ public class IMListenerImpl implements IMListener {
             Assert.hasText(paymentAmount);
         }
         //TODO: insert IDM call record to T_MARGIN_CALL_RECORD
-        OutboundMessage messageOut = new OutboundMessage();
-        String messageOutText = "paid " + marginCallId.substring(marginCallId.indexOf("-") + 1);
-        messageOut.setMessage(messageOutText);
-        try {
-            this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (marginCallId.startsWith("D")) {
+            OutboundMessage messageOut = new OutboundMessage();
+            String messageOutText = "paid " + marginCallId.substring(marginCallId.indexOf("-") + 1);
+            messageOut.setMessage(messageOutText);
+            try {
+                this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

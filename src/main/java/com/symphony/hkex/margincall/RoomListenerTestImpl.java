@@ -59,13 +59,7 @@ public class RoomListenerTestImpl implements RoomListener {
     }
 
     public void onUserJoinedRoom(UserJoinedRoom userJoinedRoom) {
-        OutboundMessage messageOut = new OutboundMessage();
-        messageOut.setMessage("Welcome " + userJoinedRoom.getAffectedUser().getFirstName() + "!");
-        try {
-            this.botClient.getMessagesClient().sendMessage(userJoinedRoom.getStream().getStreamId(), messageOut);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void onUserLeftRoom(UserLeftRoom userLeftRoom) {
