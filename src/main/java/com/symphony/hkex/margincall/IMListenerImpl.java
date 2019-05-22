@@ -87,7 +87,7 @@ public class IMListenerImpl implements IMListener {
                 "========================<br/>" +
                 "#paymentStatus<br/>" +
                 "========================";
-        String messageOutText = outboundMessageTemplate.replace("#System-#workflowId", marginCallId).replace("#partOrGcpName", partOrGcpName).replace("#partOrGcpID", partOrGcpID).replace("#paymentStatus", "Payment fund ready");
+        String messageOutText = outboundMessageTemplate.replace("#System-#workflowId", marginCallId).replace("#partOrGcpName", partOrGcpName).replace("#partOrGcpID", partOrGcpID).replace("#paymentStatus", "Funding ready.");
         messageOut.setMessage(messageOutText);
         try {
             this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
