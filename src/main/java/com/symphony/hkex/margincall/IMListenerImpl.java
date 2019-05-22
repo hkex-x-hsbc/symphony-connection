@@ -6,8 +6,12 @@ import listeners.IMListener;
 import model.InboundMessage;
 import model.OutboundMessage;
 import model.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IMListenerImpl implements IMListener {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(IMListenerImpl.class);
 
     private SymBotClient botClient;
 
@@ -21,7 +25,8 @@ public class IMListenerImpl implements IMListener {
         String partOrGcpID = null;
         String paymentAmount = null;
         String inboundMessageText = inboundMessage.getMessageText();
-        if(inboundMessageText!=null) {
+        if (inboundMessageText != null) {
+            LOGGER.info("Incoming IM Message:\n" + inboundMessageText);
             if (inboundMessageText.indexOf("Margin Call ID:") > -1 && inboundMessageText.indexOf("GCP Name:") > inboundMessageText.indexOf("Margin Call ID:")) {
                 marginCallId = inboundMessageText.substring(inboundMessageText.indexOf("Margin Call ID:") + 15);
                 marginCallId = marginCallId.substring(0, marginCallId.indexOf("GCP Name:"));
@@ -51,6 +56,7 @@ public class IMListenerImpl implements IMListener {
             Assert.hasText(paymentAmount);
         } else {
             inboundMessageText = inboundMessage.getMessage();
+            LOGGER.info("Incoming IM Message:\n" + inboundMessageText);
             if (inboundMessageText.indexOf("Margin Call ID:") > -1) {
                 marginCallId = inboundMessageText.substring(inboundMessageText.indexOf("Margin Call ID:") + 15);
                 marginCallId = marginCallId.substring(0, marginCallId.indexOf("</p>"));

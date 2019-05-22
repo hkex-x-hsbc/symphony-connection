@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 public class RoomListenerTestImpl implements RoomListener {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(RoomListenerTestImpl.class);
+
     private SymBotClient botClient;
 
     public RoomListenerTestImpl(SymBotClient botClient) {
@@ -21,7 +23,8 @@ public class RoomListenerTestImpl implements RoomListener {
 
     public void onRoomMessage(InboundMessage inboundMessage) {
         OutboundMessage messageOut = new OutboundMessage();
-        if(inboundMessage.getMessage().contains("@innovate_bot_68")) {
+        LOGGER.info("Incoming Room Message:\n" + inboundMessage.getMessage());
+        if (inboundMessage.getMessage().contains("@innovate_bot_68")) {
             messageOut.setMessage("Hi " + inboundMessage.getUser().getFirstName() + "!");
             try {
                 this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
@@ -57,7 +60,7 @@ public class RoomListenerTestImpl implements RoomListener {
 
     public void onUserJoinedRoom(UserJoinedRoom userJoinedRoom) {
         OutboundMessage messageOut = new OutboundMessage();
-        messageOut.setMessage("Welcome "+userJoinedRoom.getAffectedUser().getFirstName()+"!");
+        messageOut.setMessage("Welcome " + userJoinedRoom.getAffectedUser().getFirstName() + "!");
         try {
             this.botClient.getMessagesClient().sendMessage(userJoinedRoom.getStream().getStreamId(), messageOut);
         } catch (Exception e) {
