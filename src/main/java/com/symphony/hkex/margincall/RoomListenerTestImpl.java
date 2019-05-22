@@ -21,11 +21,13 @@ public class RoomListenerTestImpl implements RoomListener {
 
     public void onRoomMessage(InboundMessage inboundMessage) {
         OutboundMessage messageOut = new OutboundMessage();
-        messageOut.setMessage("Hi "+inboundMessage.getUser().getFirstName()+"!");
-        try {
-            this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(inboundMessage.getMessage().contains("@innovate_bot_68")) {
+            messageOut.setMessage("Hi " + inboundMessage.getUser().getFirstName() + "!");
+            try {
+                this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
