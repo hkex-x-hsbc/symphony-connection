@@ -86,7 +86,7 @@ public class IMListenerImpl implements IMListener {
                     }
                 } else {
                     if (inboundMessageText.indexOf("Part Name:") > -1) {
-                        partOrGcpName = inboundMessageText.substring(inboundMessageText.indexOf("GCP Name:") + 10).trim();
+                        partOrGcpName = inboundMessageText.substring(inboundMessageText.indexOf("Part Name:") + 10).trim();
                         partOrGcpName = partOrGcpName.substring(0, partOrGcpName.indexOf("</p>")).trim();
                     }
                 }
