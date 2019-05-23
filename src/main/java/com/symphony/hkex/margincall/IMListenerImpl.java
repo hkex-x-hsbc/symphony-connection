@@ -173,7 +173,7 @@ public class IMListenerImpl implements IMListener {
                 String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
                 String colour = "green";
                 if (report.get("paymentAmount").equalsIgnoreCase("-16,000")) {
-                    colour = "yellow";
+                    colour = "#FFBF00";
                 }
                 try {
                     String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, report.get("paymentAmount"), dueDate, stockCode, colour);
