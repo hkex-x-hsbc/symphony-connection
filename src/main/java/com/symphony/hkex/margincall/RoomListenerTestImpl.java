@@ -1,6 +1,7 @@
 package com.symphony.hkex.margincall;
 
 import clients.SymBotClient;
+import com.symphony.hkex.margincall.dao.IdmMappingDao;
 import listeners.RoomListener;
 import model.InboundMessage;
 import model.OutboundMessage;
@@ -15,8 +16,11 @@ public class RoomListenerTestImpl implements RoomListener {
 
     private SymBotClient botClient;
 
-    public RoomListenerTestImpl(SymBotClient botClient) {
+    private IdmMappingDao idmMappingDao;
+
+    public RoomListenerTestImpl(SymBotClient botClient, IdmMappingDao idmMappingDao) {
         this.botClient = botClient;
+        this.idmMappingDao = idmMappingDao;
     }
 
     private final Logger logger = LoggerFactory.getLogger(RoomListenerTestImpl.class);

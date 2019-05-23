@@ -1,6 +1,8 @@
 package com.symphony.hkex.margincall;
 
 import clients.SymBotClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.symphony.hkex.margincall.dao.IdmMappingDao;
 import io.jsonwebtoken.lang.Assert;
 import listeners.IMListener;
 import model.InboundMessage;
@@ -9,14 +11,21 @@ import model.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class IMListenerImpl implements IMListener {
 
     private static Logger LOGGER = LoggerFactory.getLogger(IMListenerImpl.class);
 
     private SymBotClient botClient;
 
-    public IMListenerImpl(SymBotClient botClient) {
+    private IdmMappingDao idmMappingDao;
+
+    public IMListenerImpl(SymBotClient botClient, IdmMappingDao idmMappingDao) {
         this.botClient = botClient;
+        this.idmMappingDao = idmMappingDao;
     }
 
     public void onIMMessage(InboundMessage inboundMessage) {
@@ -27,6 +36,7 @@ public class IMListenerImpl implements IMListener {
         String marginCallType = null;
         String inboundMessageText = inboundMessage.getMessageText();
         try {
+            inboundMessageText = null;
             if (inboundMessageText != null) {
                 LOGGER.info("Incoming IM Message:\n" + inboundMessageText);
                 if (inboundMessageText.indexOf("Margin Call ID:") > -1) {
@@ -116,6 +126,27 @@ public class IMListenerImpl implements IMListener {
         } catch (IllegalArgumentException e) {
             LOGGER.warn("invalid message format: ", e);
             return;
+        }
+
+        if (marginCallType.equals("D")) {
+            String symphonyId = idmMappingDao.getSymphonyIDForCallTypeD();
+            Map<String, String> report = new HashMap<>();
+            report.put("callID", marginCallId.substring(marginCallId.indexOf("-") + 1));
+            report.put("partID", partOrGcpID);
+            report.put("partName", partOrGcpName);
+            report.put("paymentAmount", paymentAmount);
+            try {
+                String roomMessageOut = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(report);
+                OutboundMessage outboundMessage = new OutboundMessage();
+                outboundMessage.setMessage(roomMessageOut);
+                this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
+            } catch (Exception e) {
+                LOGGER.error("Fail to route to room type D", e);
+            }
+        } else {
+
+            List<Map<String, Object>> symphonyIds = idmMappingDao.getSymphonyIDForCallTypeC();
+
         }
 
         //TODO: insert IDM call record to T_MARGIN_CALL_RECORD

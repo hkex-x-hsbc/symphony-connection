@@ -14,3 +14,14 @@ create table t_margin_call_record
     STATUS VARCHAR2(32) NOT NULL,
     constraint pk_margin_call_record primary key (CALL_ID)
 );
+
+create table t_idm_room_mapping_c
+(
+    STOCK_CODE VARCHAR2(256) NOT NULL,
+    SYMPHONY_ID VARCHAR2(128) NOT NULL
+);
+
+create table t_idm_room_mapping_d
+(
+    SYMPHONY_ID VARCHAR2(128) NOT NULL
+);
