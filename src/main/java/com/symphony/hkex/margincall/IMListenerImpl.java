@@ -170,13 +170,13 @@ public class IMListenerImpl implements IMListener {
                 report.put("callID", marginCallId.substring(marginCallId.indexOf("-") + 1));
                 report.put("stockCode", stockCode);
                 report.put("paymentAmount", amountTableMap.get(stockCode));
-                String dueDate = new Date(new Date().getTime()+3600*1000).toString();
+                String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
                 String colour = "green";
-                if (paymentAmount.equalsIgnoreCase("-16,000")) {
+                if (report.get("paymentAmount").equalsIgnoreCase("-16,000")) {
                     colour = "yellow";
                 }
                 try {
-                    String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, stockCode,colour);
+                    String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, report.get("paymentAmount"), dueDate, stockCode, colour);
                     OutboundMessage outboundMessage = new OutboundMessage();
                     outboundMessage.setMessage(roomMessageOut);
                     this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -213,14 +213,14 @@ public class IMListenerImpl implements IMListener {
                 "<td><b>Due Time</b></td>" +
                 "</tr>" +
                 "<tr>" +
-                "<td>"+partId+"</td>" +
-                "<td>"+marginCallId+"</td>" +
-                "<td style='color:"+colour+"'>"+paymentAmount+"</td>" +
-                "<td>"+dueDate+"</td>" +
+                "<td>" + partId + "</td>" +
+                "<td>" + marginCallId + "</td>" +
+                "<td style='color:" + colour + "'>" + paymentAmount + "</td>" +
+                "<td>" + dueDate + "</td>" +
                 "</tr>" +
                 "</table>" +
                 "<br/>" +
-                "<div style='display:none'>"+stockCode+"</div>" +
+                "<div style='display:none'>" + stockCode + "</div>" +
                 "Please prepare the require fund amount by the due time.<br/>" +
                 "If you have any questions, please feel free to contact us at +852 2288 1234";
     }
