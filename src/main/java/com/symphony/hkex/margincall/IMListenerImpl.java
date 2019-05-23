@@ -11,6 +11,7 @@ import model.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class IMListenerImpl implements IMListener {
         try {
             if (inboundMessageText != null) {
                 LOGGER.info("Incoming IM Message:\n" + inboundMessageText);
+
                 if (inboundMessageText.indexOf("Margin Call ID:") > -1) {
                     marginCallId = inboundMessageText.substring(inboundMessageText.indexOf("Margin Call ID:") + 15).trim();
                     marginCallType = marginCallId.startsWith("D") ? "D" : "C";
@@ -134,8 +136,9 @@ public class IMListenerImpl implements IMListener {
             report.put("partID", partOrGcpID);
             report.put("partName", partOrGcpName);
             report.put("paymentAmount", paymentAmount);
+            String dueDate = new Date(new Date().getTime()+3600*1000).toString();
             try {
-                String roomMessageOut = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(report);
+                String roomMessageOut = formatDMessage(marginCallId, paymentAmount, dueDate);
                 OutboundMessage outboundMessage = new OutboundMessage();
                 outboundMessage.setMessage(roomMessageOut);
                 this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -163,6 +166,25 @@ public class IMListenerImpl implements IMListener {
 
     public void onIMCreated(Stream stream) {
 
+    }
+
+    public static String formatDMessage(String marginCallId, String paymentAmount, String dueDate) {
+        return "Hi there,<br /> Please find Intra-Day Margin Call report as below<br /><br />" +
+                "<table>" +
+                "<tr>" +
+                "<td><b>Call ID</b></td>" +
+                "<td><b>Amount</b></td>" +
+                "<td><b>Due Time</b></td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>"+marginCallId+"</td>" +
+                "<td style='color:#FF0000'>"+paymentAmount+"</td>" +
+                "<td>"+dueDate+"</td>" +
+                "</tr>" +
+                "</table>" +
+                "<br/>" +
+                "Please prepare the require fund amount by the due time.<br/>" +
+                "If you have any questions, please feel free to contact us at +852 2288 1234";
     }
 
 }
