@@ -25,3 +25,8 @@ create table t_idm_room_mapping_d
 (
     SYMPHONY_ID VARCHAR2(128) NOT NULL
 );
+
+create table t_idm_hkex_bot_mapping
+(
+    SYMPHONY_ID VARCHAR2(128) NOT NULL
+)

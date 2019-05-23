@@ -11,7 +11,9 @@ import model.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,9 +127,11 @@ public class IMListenerImpl implements IMListener {
                 Assert.hasText(paymentAmount);
             }
         } catch (IllegalArgumentException e) {
-            LOGGER.warn("invalid message format: ", e);
+            LOGGER.debug("invalid message format: ", e);
             return;
         }
+
+        idmMappingDao.saveHKEXChatBotSymphonyID(inboundMessage.getStream().getStreamId());
 
         if (marginCallType.equals("D")) {
             String symphonyId = idmMappingDao.getSymphonyIDForCallTypeD();
@@ -146,22 +150,46 @@ public class IMListenerImpl implements IMListener {
                 LOGGER.error("Fail to route to room type D", e);
             }
         } else {
-
-            List<Map<String, Object>> symphonyIds = idmMappingDao.getSymphonyIDForCallTypeC();
-
+            String originMessageText = inboundMessage.getMessageText();
+            String amountTable = originMessageText.substring(originMessageText.indexOf("StockQuantityMarks amount") + 25);
+            amountTable = amountTable.substring(0, amountTable.indexOf("For more details")).trim();
+            String[] amountTableArray = amountTable.split("\\s+");
+            Map<String, String> amountTableMap = new HashMap<>();
+            List<String> stockCodeList = new ArrayList<>();
+            for (int i = 0; i < amountTableArray.length; i++) {
+                amountTableMap.put(amountTableArray[i].trim().substring(0, 5), amountTableArray[i].trim().substring(5));
+                stockCodeList.add(amountTableArray[i].trim().substring(0, 5));
+            }
+            List<Map<String, Object>> symphonyIds = idmMappingDao.getSymphonyIDForCallTypeC(stockCodeList.toArray(new String[stockCodeList.size()]));
+            for (int j = 0; j < symphonyIds.size(); j++) {
+                String stockCode = String.valueOf(symphonyIds.get(j).get("STOCK_CODE"));
+                String symphonyId = String.valueOf(symphonyIds.get(j).get("SYMPHONY_ID"));
+                Map<String, String> report = new HashMap<>();
+                report.put("callID", marginCallId.substring(marginCallId.indexOf("-") + 1));
+                report.put("stockCode", stockCode);
+                report.put("paymentAmount", amountTableMap.get(stockCode));
+                try {
+                    String roomMessageOut = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(report);
+                    OutboundMessage outboundMessage = new OutboundMessage();
+                    outboundMessage.setMessage(roomMessageOut);
+                    this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
+                } catch (Exception e) {
+                    LOGGER.error("Fail to route to room type D", e);
+                }
+            }
         }
 
         //TODO: insert IDM call record to T_MARGIN_CALL_RECORD
-        if (marginCallType.equals("D")) {
-            OutboundMessage messageOut = new OutboundMessage();
-            String messageOutText = "paid " + marginCallId.substring(marginCallId.indexOf("-") + 1);
-            messageOut.setMessage(messageOutText);
-            try {
-                this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (marginCallType.equals("D")) {
+//            OutboundMessage messageOut = new OutboundMessage();
+//            String messageOutText = "paid " + marginCallId.substring(marginCallId.indexOf("-") + 1);
+//            messageOut.setMessage(messageOutText);
+//            try {
+//                this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public void onIMCreated(Stream stream) {

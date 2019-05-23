@@ -22,7 +22,7 @@ public class IdmMappingDao {
         if (stockCode.length < 1) {
             return new ArrayList<>();
         }
-        StringBuffer sql = new StringBuffer("select SYMPHONY_ID from t_idm_room_mapping_d where stock_code in ( ");
+        StringBuffer sql = new StringBuffer("select STOCK_CODE, SYMPHONY_ID from t_idm_room_mapping_c where stock_code in ( ");
         for (int i = 0; i < stockCode.length; i++) {
             if (i == 0) {
                 sql.append("?");
@@ -32,6 +32,14 @@ public class IdmMappingDao {
         }
         sql.append(" )");
         return jdbcTemplate.queryForList(sql.toString(), stockCode);
+    }
+
+    public int saveHKEXChatBotSymphonyID(String symphonyID) {
+        return jdbcTemplate.update("update t_idm_hkex_bot_mapping set symphony_id = ? ", symphonyID);
+    }
+
+    public String getHKEXChatBotSymphonyID() {
+        return jdbcTemplate.queryForObject("select symphony_id from t_idm_hkex_bot_mapping", String.class);
     }
 
 
