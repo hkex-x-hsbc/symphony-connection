@@ -142,7 +142,7 @@ public class IMListenerImpl implements IMListener {
             report.put("paymentAmount", paymentAmount);
             String dueDate = new Date(new Date().getTime()+3600*1000).toString();
             try {
-                String roomMessageOut = formatDMessage(marginCallId, paymentAmount, dueDate);
+                String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "#FF0000");
                 OutboundMessage outboundMessage = new OutboundMessage();
                 outboundMessage.setMessage(roomMessageOut);
                 this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -168,8 +168,9 @@ public class IMListenerImpl implements IMListener {
                 report.put("callID", marginCallId.substring(marginCallId.indexOf("-") + 1));
                 report.put("stockCode", stockCode);
                 report.put("paymentAmount", amountTableMap.get(stockCode));
+                String dueDate = new Date(new Date().getTime()+3600*1000).toString();
                 try {
-                    String roomMessageOut = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(report);
+                    String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "green");
                     OutboundMessage outboundMessage = new OutboundMessage();
                     outboundMessage.setMessage(roomMessageOut);
                     this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -196,17 +197,19 @@ public class IMListenerImpl implements IMListener {
 
     }
 
-    public static String formatDMessage(String marginCallId, String paymentAmount, String dueDate) {
+    public static String formatDMessage(String partId, String marginCallId, String paymentAmount, String dueDate, String colour) {
         return "Hi there,<br /> Please find Intra-Day Margin Call report as below<br /><br />" +
                 "<table>" +
                 "<tr>" +
+                "<td><b>Broker ID</b></td>" +
                 "<td><b>Call ID</b></td>" +
                 "<td><b>Amount</b></td>" +
                 "<td><b>Due Time</b></td>" +
                 "</tr>" +
                 "<tr>" +
+                "<td>"+partId+"</td>" +
                 "<td>"+marginCallId+"</td>" +
-                "<td style='color:#FF0000'>"+paymentAmount+"</td>" +
+                "<td style='color:"+colour+"'>"+paymentAmount+"</td>" +
                 "<td>"+dueDate+"</td>" +
                 "</tr>" +
                 "</table>" +
