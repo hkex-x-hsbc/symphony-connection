@@ -33,11 +33,13 @@ public class RoomListenerTestImpl implements RoomListener {
             String callID = inboundMessage.getMessage();
             callID = callID.substring(callID.indexOf("fund is ready") + 13);
             callID = callID.substring(callID.indexOf("</div>"));
-            messageOut.setMessage("paid " + callID);
-            try {
-                this.botClient.getMessagesClient().sendMessage(hkexSymphonyID, messageOut);
-            } catch (Exception e) {
-                logger.error("onRoomMessage error", e);
+            if(callID.startsWith("D")) {
+                messageOut.setMessage("paid " + callID.substring(2));
+                try {
+                    this.botClient.getMessagesClient().sendMessage(hkexSymphonyID, messageOut);
+                } catch (Exception e) {
+                    logger.error("onRoomMessage error", e);
+                }
             }
         }
     }
