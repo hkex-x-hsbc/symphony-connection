@@ -36,7 +36,6 @@ public class IMListenerImpl implements IMListener {
         String marginCallType = null;
         String inboundMessageText = inboundMessage.getMessageText();
         try {
-            inboundMessageText = null;
             if (inboundMessageText != null) {
                 LOGGER.info("Incoming IM Message:\n" + inboundMessageText);
                 if (inboundMessageText.indexOf("Margin Call ID:") > -1) {
