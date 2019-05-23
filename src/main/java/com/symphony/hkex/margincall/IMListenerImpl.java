@@ -140,7 +140,7 @@ public class IMListenerImpl implements IMListener {
             report.put("partID", partOrGcpID);
             report.put("partName", partOrGcpName);
             report.put("paymentAmount", paymentAmount);
-            String dueDate = new Date(new Date().getTime()+3600*1000).toString();
+            String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
             try {
                 String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "#FF0000");
                 OutboundMessage outboundMessage = new OutboundMessage();
@@ -157,7 +157,9 @@ public class IMListenerImpl implements IMListener {
             Map<String, String> amountTableMap = new HashMap<>();
             List<String> stockCodeList = new ArrayList<>();
             for (int i = 0; i < amountTableArray.length; i++) {
-                amountTableMap.put(amountTableArray[i].trim().substring(0, 5), amountTableArray[i].trim().substring(5));
+                String marksAmount = amountTableArray[i].trim().substring(5);
+                marksAmount = marksAmount.substring(marksAmount.indexOf("-"));
+                amountTableMap.put(amountTableArray[i].trim().substring(0, 5), marksAmount);
                 stockCodeList.add(amountTableArray[i].trim().substring(0, 5));
             }
             List<Map<String, Object>> symphonyIds = idmMappingDao.getSymphonyIDForCallTypeC(stockCodeList.toArray(new String[stockCodeList.size()]));
