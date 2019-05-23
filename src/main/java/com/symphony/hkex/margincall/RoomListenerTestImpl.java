@@ -28,12 +28,14 @@ public class RoomListenerTestImpl implements RoomListener {
     public void onRoomMessage(InboundMessage inboundMessage) {
         OutboundMessage messageOut = new OutboundMessage();
         LOGGER.info("Incoming Room Message:\n" + inboundMessage.getMessage());
-        if (inboundMessage.getMessage().contains("@innovate_bot_68")) {
-            messageOut.setMessage("Hi " + inboundMessage.getUser().getFirstName() + "!");
+        if (inboundMessage.getMessage().contains("fund is ready")) {
+            String hkexSymphonyID = idmMappingDao.getHKEXChatBotSymphonyID();
+            String callID = "999";
+            messageOut.setMessage("paid " + callID);
             try {
-                this.botClient.getMessagesClient().sendMessage(inboundMessage.getStream().getStreamId(), messageOut);
+                this.botClient.getMessagesClient().sendMessage(hkexSymphonyID, messageOut);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("onRoomMessage error", e);
             }
         }
     }
