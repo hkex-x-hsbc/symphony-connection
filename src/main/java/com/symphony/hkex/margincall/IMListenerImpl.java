@@ -142,7 +142,7 @@ public class IMListenerImpl implements IMListener {
             report.put("paymentAmount", paymentAmount);
             String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
             try {
-                String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "#FF0000");
+                String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "", "#FF0000");
                 OutboundMessage outboundMessage = new OutboundMessage();
                 outboundMessage.setMessage(roomMessageOut);
                 this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -171,8 +171,12 @@ public class IMListenerImpl implements IMListener {
                 report.put("stockCode", stockCode);
                 report.put("paymentAmount", amountTableMap.get(stockCode));
                 String dueDate = new Date(new Date().getTime()+3600*1000).toString();
+                String colour = "green";
+                if (paymentAmount.equalsIgnoreCase("-16,000")) {
+                    colour = "yellow";
+                }
                 try {
-                    String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "green");
+                    String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, stockCode,colour);
                     OutboundMessage outboundMessage = new OutboundMessage();
                     outboundMessage.setMessage(roomMessageOut);
                     this.botClient.getMessagesClient().sendMessage(symphonyId, outboundMessage);
@@ -199,7 +203,7 @@ public class IMListenerImpl implements IMListener {
 
     }
 
-    public static String formatDMessage(String partId, String marginCallId, String paymentAmount, String dueDate, String colour) {
+    public static String formatDMessage(String partId, String marginCallId, String paymentAmount, String dueDate, String stockCode, String colour) {
         return "Hi there,<br /> Please find Intra-Day Margin Call report as below<br /><br />" +
                 "<table>" +
                 "<tr>" +
@@ -216,6 +220,7 @@ public class IMListenerImpl implements IMListener {
                 "</tr>" +
                 "</table>" +
                 "<br/>" +
+                "<div style='display:none'>"+stockCode+"</div>" +
                 "Please prepare the require fund amount by the due time.<br/>" +
                 "If you have any questions, please feel free to contact us at +852 2288 1234";
     }
