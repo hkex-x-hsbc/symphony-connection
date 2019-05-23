@@ -32,7 +32,7 @@ public class RoomListenerTestImpl implements RoomListener {
             String hkexSymphonyID = idmMappingDao.getHKEXChatBotSymphonyID();
             String callID = inboundMessage.getMessage();
             callID = callID.substring(callID.indexOf("fund is ready") + 13);
-            callID = callID.substring(0, callID.indexOf("</div>"));
+            callID = callID.substring(0, callID.indexOf("</div>")).trim();
             if (callID.startsWith("D")) {
                 messageOut.setMessage("paid " + callID.substring(2));
                 try {
