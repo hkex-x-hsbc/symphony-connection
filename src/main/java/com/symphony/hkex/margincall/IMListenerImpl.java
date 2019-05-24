@@ -12,11 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class IMListenerImpl implements IMListener {
 
@@ -140,7 +137,13 @@ public class IMListenerImpl implements IMListener {
             report.put("partID", partOrGcpID);
             report.put("partName", partOrGcpName);
             report.put("paymentAmount", paymentAmount);
-            String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
+
+            final SimpleDateFormat sdf =
+                    new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a z");
+
+            sdf.setTimeZone(TimeZone.getTimeZone("Hongkong"));
+            String dueDate = sdf.format(new Date(new Date().getTime() + 3600 * 1000));
+
             try {
                 String roomMessageOut = formatDMessage(partOrGcpID, marginCallId, paymentAmount, dueDate, "", "#FF0000");
                 OutboundMessage outboundMessage = new OutboundMessage();
@@ -170,7 +173,13 @@ public class IMListenerImpl implements IMListener {
                 report.put("callID", marginCallId.substring(marginCallId.indexOf("-") + 1));
                 report.put("stockCode", stockCode);
                 report.put("paymentAmount", amountTableMap.get(stockCode));
-                String dueDate = new Date(new Date().getTime() + 3600 * 1000).toString();
+
+                final SimpleDateFormat sdf =
+                        new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a z");
+
+                sdf.setTimeZone(TimeZone.getTimeZone("Hongkong"));
+                String dueDate = sdf.format(new Date(new Date().getTime() + 3600 * 1000));
+
                 String colour = "green";
                 if (report.get("paymentAmount").equalsIgnoreCase("-16,000")) {
                     colour = "#FFBF00";
