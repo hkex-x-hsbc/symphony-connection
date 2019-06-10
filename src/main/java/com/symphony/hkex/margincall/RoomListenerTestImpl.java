@@ -33,7 +33,8 @@ public class RoomListenerTestImpl implements RoomListener {
             String callID = inboundMessage.getMessage();
             callID = callID.substring(callID.indexOf("fund is ready") + 13);
             callID = callID.substring(0, callID.indexOf("</div>")).trim();
-            if (callID.startsWith("D")) {
+//            if (callID.startsWith("D") ) {
+            if (callID.startsWith("D") || callID.startsWith("C") ) {
                 messageOut.setMessage("paid " + callID.substring(2));
                 try {
                     this.botClient.getMessagesClient().sendMessage(hkexSymphonyID, messageOut);
