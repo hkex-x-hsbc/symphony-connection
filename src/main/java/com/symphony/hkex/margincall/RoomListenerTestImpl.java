@@ -37,6 +37,8 @@ public class RoomListenerTestImpl implements RoomListener {
             if (callID.startsWith("D") || callID.startsWith("C") ) {
                 messageOut.setMessage("paid " + callID.substring(2));
                 try {
+
+                    Thread.sleep(10000);
                     this.botClient.getMessagesClient().sendMessage(hkexSymphonyID, messageOut);
                 } catch (Exception e) {
                     logger.error("onRoomMessage error", e);
